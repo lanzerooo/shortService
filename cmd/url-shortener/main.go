@@ -7,6 +7,9 @@ import (
 	"http-app/internal/storage/sqlite"
 	"log/slog"
 	"os"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 const (
@@ -37,9 +40,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	_ = storage
-
 	//TODO: init router: chi, render
+
+	router := chi.NewRouter()
+
+	//middleware
+
+	router.Use(middleware.RequestID)
+	router.Use(middleware.Logger)
+	//router.Use(mwLogger.New(log))
+	router.Use(middleware.Recoverer)
+	router.Use(middleware.URLFormat)
 
 	//TODO: run server
 }
